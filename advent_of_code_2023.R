@@ -92,10 +92,11 @@ count_sets <- function(data, return_n_sets = TRUE) {
   tmp <-
     unname(
       sapply(data, 
-             function(x) strsplit(gsub(pattern = ".*: ", replacement = "", x = x), 
+             function(x) strsplit(gsub(pattern = ".*: ",  replacement = "", x = x), 
                                   split = ";")
-             )
-      )
+                    
+                  )
+           )
   
   if(return_n_sets) sapply(tmp, length) else tmp
 }
@@ -200,4 +201,48 @@ sum_games(input_data = day2_task,
           blue = 14, 
           green = 13, 
           red = 12)
+
+
+
+# part 2 ------------------------------------------------------------------
+
+
+fewest_balls <- function(input_data, blue, green, red) {
+  
+  n_sets_per_game <- count_sets(data = input_data, return_n_sets = T)
+  n_games <- 1:length(input_data)
+  
+  res <- list()
+  for(game in seq_along(n_games)) {
+    
+    tmp <- list()
+    n_sets <- 1:max(n_sets_per_game[game])
+    
+    for(set in seq_along(n_sets)) {
+      
+      tmp[[paste(game, set)]] <- t(compose_matrix(data = input_data, set = n_sets[set]))[,game]
+      
+    }
+    
+    res[[game]] <- tmp %>% do.call(rbind,.) %>% apply(MARGIN = 2, FUN = max)
+  }
+  
+  out <- list(mtx = res, sum = sum(sapply(res, prod)))
+  return(out)
+}
+
+
+# sample
+fewest_balls(input_data = day2_sample, 
+             blue = 14, 
+             green = 13, 
+             red = 12)
+
+# solution
+
+fewest_balls(input_data = day2_task, 
+             blue = 14, 
+             green = 13, 
+             red = 12)
+
 
