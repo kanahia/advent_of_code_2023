@@ -245,4 +245,80 @@ fewest_balls(input_data = day2_task,
              green = 13, 
              red = 12)
 
+# Day 3: Gear Ratios ------------------------------------------------------
+# that was tough one. I did most of the task by myself, but then stuck and search for hints
+# still I would like to work on my initial idea with symbol
+
+day3_sample <- readLines("~/Projects/advent_of_code_2023/data/day3-sample.txt")
+day3_task <- readLines("~/Projects/advent_of_code_2023/data/day3-task.txt")
+
+neighbor <- function(x, y, x_max = nrow(res_mtx), y_max = ncol(res_mtx)) {
+  
+  xs <- x + c(-1, 0, 1)
+  ys <- y + c(-1, 0, 1)
+  
+  xs <- xs[xs > 0]
+  ys <- ys[ys > 0]
+  xs <- xs[xs <= x_max]
+  ys <- ys[ys <= y_max]
+  
+  mtx[xs, ys]
+}
+
+
+data <- day3_task
+
+
+n_elements <- table(strsplit(data, split = "") %>% sapply(., length))
+
+mtx <- 
+  strsplit(data, split = "") %>% 
+  unlist() %>% 
+  matrix(ncol = n_elements, byrow = T)
+
+digits <- c(as.character(seq(0,9,1)), ".")
+numbers <- digits[-length(digits)]
+
+# for(row in 1:nrow(mtx)) {
+#   for(col in 1:ncol(mtx)) {
+#     
+#     if(! mtx[row,col] %in% digits ) {
+#       mtx[row, col] <- "Symbol"
+#     } 
+#   }
+# }
+# 
+# symbol_locations <- which(mtx == "Symbol", arr.ind = TRUE)
+
+res_mtx <- matrix(FALSE, nrow = ncol(mtx), ncol = ncol(mtx))
+
+for(row in 1:nrow(mtx)) {
+  for(col in 1:ncol(mtx)) {
+    
+    res_mtx[row, col] <- ifelse(
+      mtx[row, col] %in% numbers,
+      any(!neighbor(row, col) %in% digits),
+      FALSE
+    )
+  }
+}
+
+
+num_len <- data %>% stringr::str_locate_all("\\d+")
+
+res <- c()
+
+for (i in seq_along(data)) {
+  rows <- num_len[[i]]
+  for (row in seq_len(nrow(rows))) {
+    start <- rows[row, 1]
+    end <- rows[row, 2]
+    if (any(res_mtx[i, seq(start, end)])) {
+      res <- c(res, stringr::str_sub(data[i], start, end))
+    }
+  }
+}
+
+
+as.numeric(res) %>% sum()
 
