@@ -266,7 +266,8 @@ neighbor <- function(x, y, x_max = nrow(res_mtx), y_max = ncol(res_mtx)) {
 }
 
 
-data <- day3_task
+#data <- day3_task
+data <- day3_sample
 
 
 n_elements <- table(strsplit(data, split = "") %>% sapply(., length))
@@ -390,7 +391,7 @@ res_sample <- count_points(data = day4_sample)
 res_task <- count_points(data = day4_task)
 
 m <- res_task$n_matches
-# I missed this part and need to get inspiration from others
+# I missed this part and needed to get inspiration from others
 cards <- rep(1, res_task$total_cards)
 
 for(i in seq_along(cards)) {
