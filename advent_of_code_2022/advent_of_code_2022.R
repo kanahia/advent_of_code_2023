@@ -1,7 +1,7 @@
 
 # Day 1: Calorie Counting -------------------------------------------------
 
-elf <- read.table("/home/jason/practice/advent_of_code/task1.txt", blank.lines.skip = F) %>%
+elf <- read.table("task1.txt", blank.lines.skip = F) %>%
   dplyr::mutate(V1 = ifelse(is.na(V1), 0, V1))
 
 index_i <- c(1, zeros[seq(1,length(zeros), 2)])
@@ -39,7 +39,7 @@ l %>% unlist() %>% sort() %>% tail(3) %>% sum()
 # plus the score for the outcome of the round (0 if lost, 3 if draw, and 6 if won)
 
 game <-
-  read.table("/home/jason/practice/advent_of_code/task3.txt") %>%
+  read.table("task3.txt") %>%
   dplyr::mutate(V1 = case_when(V1 == "A" ~ "Rock",
                                V1 == "B" ~ "Paper",
                                V1 == "C" ~ "Scissors"),
@@ -77,7 +77,7 @@ sum(game[, 4:5])
 # Z means you need to win
 
 game2 <-
-  read.table("/home/jason/practice/advent_of_code/task3.txt") %>%
+  read.table("task3.txt") %>%
   dplyr::mutate(V1 = case_when(V1 == "A" ~ "Rock",
                                V1 == "B" ~ "Paper",
                                V1 == "C" ~ "Scissors"),
@@ -114,7 +114,7 @@ sum(game2[, 4:5])
 
 
 # Day 3: Rucksack Reorganization ------------------------------------------
-items <- readLines("/home/jason/practice/advent_of_code/day3.txt") %>%
+items <- readLines("day3.txt") %>%
   as.list()
 
 
@@ -213,7 +213,7 @@ df_item$score %>% sum()
 
 # task2 -------------------------------------------------------------------
 # macio showing how to
-items <- readLines("/home/jason/practice/advent_of_code/day3.txt")
+items <- readLines("day3.txt")
 groups <- vector("list", length = length(items)/3)
 counter <- 0
 pointer <- 1
@@ -253,7 +253,7 @@ sum(final_res)
 
 # Day 4: Camp Cleanup -----------------------------------------------------
 
-groups <- readLines("/home/jason/practice/advent_of_code/day4.txt") %>%
+groups <- readLines("day4.txt") %>%
   as.data.frame() %>%
   dplyr::rename("A" = 1) %>%
   tidyr::separate(., col = "A", c("A", "B"), sep = ",") %>%
@@ -312,7 +312,7 @@ table(test2 > 0)
 # 1   2   3   4   5   6   7   8   9 
 
 boxes_header <- 
-  readLines("/home/jason/practice/advent_of_code/day5.txt")
+  readLines("day5.txt")
 
 
 l <- vector("list", length = 9)
@@ -388,7 +388,7 @@ lapply(l3, function(x) x[[1]][1]) %>% unlist()
 # Specifically, it needs to report the number of characters from the beginning 
 # of the buffer to the end of the first such four-character marker.
 code <- 
-  readLines("/home/jason/practice/advent_of_code/day6.txt") %>%
+  readLines("day6.txt") %>%
   strsplit(code, split = "") %>% 
   unlist()
 
@@ -440,7 +440,7 @@ for (i in 1:length(code)) {
 # Day 8: Treetop Tree House -----------------------------------------------
 
 trees <- 
-  readLines("/home/jason/practice/advent_of_code/day8.txt") %>%
+  readLines("day8.txt") %>%
   lapply(., strsplit, split="")
 
 for(i in 1:length(trees)) {
