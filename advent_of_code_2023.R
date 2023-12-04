@@ -322,3 +322,82 @@ for (i in seq_along(data)) {
 
 as.numeric(res) %>% sum()
 
+
+
+
+# part 2 ------------------------------------------------------------------
+
+
+
+# Day 4: Scratchcards -----------------------------------------------------
+
+day4_sample <- readLines("~/Projects/advent_of_code_2023/data/day4-sample.txt")
+day4_task <- readLines("~/Projects/advent_of_code_2023/data/day4-task.txt")
+
+count_points <- function(data) {
+  
+  #browser()
+  split_list <- sapply(X = data, strsplit, split = "\\|")
+  split_list <- lapply(X = split_list, gsub, pattern = "Card [0-9]+:", replacement = "")
+  
+  names(split_list) <- stringr::str_replace(string = names(split_list), 
+                                            pattern = ":.*", 
+                                            replacement = "")
+  
+  split_list <- sapply(X = split_list, strsplit, split = " ")
+  split_list <- lapply(X = split_list, stringi::stri_remove_empty)
+  #split_list <- sapply(split_list, as.numeric)
+  
+  n_cards <- 1:(length(split_list)/2)
+  c1 <- seq(1,max(n_cards)*2,2)
+  c2 <- seq(2,max(n_cards)*2,2)
+  
+  res <- c()
+  for(i in n_cards) {
+    if(i < max(n_cards)) {
+      res <- append(res, length(intersect(split_list[[c1[i]]], split_list[[c2[i]]])))
+    }
+  }
+  
+  points_total <- c()
+  n_matches <- c() 
+  for(i in seq_along(res)) {
+    if(res[i] == 0){
+      points_total <- append(points_total, 0)
+      n_matches <- append(n_matches, 0)
+    } else {
+      points_total <- append(points_total, (2^(res[i]-1)))
+      n_matches <- append(n_matches, res[i])
+    }
+  }
+  
+  list("n_matches" = c(n_matches, 0),
+       "points_total" = c(points_total, 0),
+       "sum" = sum(points_total),
+       "total_cards" = max(n_cards))
+  
+}
+
+# sample
+count_points(data = day4_sample)
+
+count_points(data = day4_task)
+
+
+# part 2 ------------------------------------------------------------------
+
+res_sample <- count_points(data = day4_sample)
+res_task <- count_points(data = day4_task)
+
+m <- res_task$n_matches
+# I missed this part and need to get inspiration from others
+cards <- rep(1, res_task$total_cards)
+
+for(i in seq_along(cards)) {
+
+    if(m[i] !=0) {
+      cards[ (i+1):(i + m[i]) ] <- cards[ (i+1):(i + m[i]) ] + cards[i] # and this
+    }
+}
+
+sum(cards)
