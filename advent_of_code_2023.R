@@ -402,3 +402,36 @@ for(i in seq_along(cards)) {
 }
 
 sum(cards)
+
+
+# Day 6: Wait For It  -----------------------------------------------------
+
+data <- readLines("~/Projects/advent_of_code_2023/data/day6-sample.txt")
+data <- readLines("~/Projects/advent_of_code_2023/data/day6-task.txt")
+
+s <- strsplit(data, ":") %>%
+  lapply(., function(x) {
+  tmp <- as.numeric(unlist(strsplit(x[-1], " ")))
+  tmp[!is.na(tmp)]
+  })
+
+raceTime <- s[[1]]
+raceDistance <- s[[2]] 
+
+combinations <- c()
+
+for(i in seq_along(raceTime)) {
+  t <- seq_len(raceTime[i])
+  sums <- 0
+  
+  for(j in t) {
+      remaining_time <- max(t) - j
+      covered_distance <- j*remaining_time
+      sums <- sum(append(sums, covered_distance > raceDistance[i]))
+  }
+  
+  combinations <- append(combinations, sums)
+}
+
+prod(combinations)
+
