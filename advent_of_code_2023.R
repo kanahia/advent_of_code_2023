@@ -406,7 +406,9 @@ sum(cards)
 
 # Day 6: Wait For It  -----------------------------------------------------
 
+# sample
 data <- readLines("~/Projects/advent_of_code_2023/data/day6-sample.txt")
+# task
 data <- readLines("~/Projects/advent_of_code_2023/data/day6-task.txt")
 
 s <- strsplit(data, ":") %>%
@@ -434,4 +436,37 @@ for(i in seq_along(raceTime)) {
 }
 
 prod(combinations)
+
+
+# part2 -------------------------------------------------------------------
+
+# sample
+data <- readLines("~/Projects/advent_of_code_2023/data/day6-sample.txt")
+# task
+data <- readLines("~/Projects/advent_of_code_2023/data/day6-task.txt")
+
+s <- strsplit(data, ":") %>%
+  lapply(., function(x) {
+    tmp <- as.numeric(unlist(strsplit(x[-1], " ")))
+    tmp[!is.na(tmp)]
+  })
+
+raceTime_2 <- as.numeric(paste0(s[[1]], collapse = ""))
+raceDistance_2 <- as.numeric(paste0(s[[2]], collapse = ""))
+
+
+# slow solution
+# sums <- 0
+# 
+# for(i in seq_len(raceTime_2)) {
+#   
+#   remaining_time <- raceTime_2 - i
+#   covered_distance <- i * remaining_time
+#   sums <- sum(append(sums, covered_distance > raceDistance_2))
+# }
+
+# much faster 
+time_intervals <- seq_len(raceTime_2)
+combinations <- (raceTime_2 - time_intervals) * time_intervals > raceDistance_2
+sum(combinations)
 
