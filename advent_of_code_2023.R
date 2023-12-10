@@ -470,3 +470,52 @@ time_intervals <- seq_len(raceTime_2)
 combinations <- (raceTime_2 - time_intervals) * time_intervals > raceDistance_2
 sum(combinations)
 
+
+# Day 7: Camel Cards ------------------------------------------------------
+
+
+# Day 8: Haunted Wasteland  -----------------------------------------------
+
+day8_sample <- readLines("~/Projects/advent_of_code_2023/data/day8-sample.txt")
+day8_sample_2 <- readLines("~/Projects/advent_of_code_2023/data/day8-sample-2.txt")
+day8_taks <- readLines("~/Projects/advent_of_code_2023/data/day8-task.txt")
+
+count_steps <- function(input) {
+  
+  directions <- unlist(strsplit(input[1], ""))
+  directions <- ifelse(directions == "L", 1, 2)
+  
+  nodes <- gsub("[()]", "", input[-c(1,2)])
+  
+  tmp <- 
+    lapply(nodes, function(x) {
+      z <- unlist(strsplit(x, "="))
+      gsub(x = unlist(strsplit(z, ","))," ", "")
+    })
+  
+  data <- lapply(tmp, function(x) x[-1])
+  names(data) <- lapply(tmp, function(x) x[1])
+  
+  
+  nm <- "AAA"
+  i <- 1
+  steps <- 0
+  
+  while(nm != "ZZZ") {
+    
+    dir <- directions[i]
+    nm <- data[[nm]][[dir]]
+    steps <- steps +1
+    i <- i+1
+    if(i > length(directions)) i <- 1
+    
+  }
+  steps
+  
+}
+
+
+count_steps(input = day8_sample)
+count_steps(input = day8_sample_2)
+count_steps(input = day8_taks)
+
