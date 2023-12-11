@@ -519,3 +519,71 @@ count_steps(input = day8_sample)
 count_steps(input = day8_sample_2)
 count_steps(input = day8_taks)
 
+
+# part 2 ------------------------------------------------------------------
+
+day8_p2 <- readLines("~/Projects/advent_of_code_2023/data/day8-sample-part2.txt")
+day8_taks <- readLines("~/Projects/advent_of_code_2023/data/day8-task.txt")
+
+input <- day8_p2
+
+directions <- unlist(strsplit(input[1], ""))
+directions <- ifelse(directions == "L", 1, 2)
+
+nodes <- gsub("[()]", "", input[-c(1,2)])
+
+tmp <- 
+  lapply(nodes, function(x) {
+    z <- unlist(strsplit(x, "="))
+    gsub(x = unlist(strsplit(z, ","))," ", "")
+  })
+
+data <- lapply(tmp, function(x) x[-1])
+names(data) <- lapply(tmp, function(x) x[1])
+
+
+# working on sample but not on task data
+start_pos <- names(data)[grepl("^..A$", names(data))]
+i <- 1
+steps <- 0
+
+while(! all(grepl("^..Z$", start_pos))) {
+  
+  dir <- directions[i]
+  start_pos <- sapply(X = data[ start_pos ], function(x) x[dir])
+  steps <- steps +1
+  i <- i+1
+  if(i > length(directions)) i <- 1
+  
+}
+steps
+
+#####
+# TO BE CONTINUED
+start_pos <- names(data)[grepl("^..A$", names(data))]
+out <- list()
+
+for(j in seq_along(start_pos)) {
+  
+  i <- 1
+  steps <- 0
+  res <- c()
+  
+  while(length(res) < 4) {
+    
+    dir <- directions[i]
+    start_pos <- sapply(X = data[ start_pos[j] ], function(x) x[dir])
+    print(start_pos)
+    steps <- steps +1
+    i <- i+1
+    if(i > length(directions)) i <- 1
+    if(grepl("^..Z$", start_pos[j])) res <- c(res, steps)
+  }
+  out[[j]] <- res
+}
+
+steps
+
+
+
+
