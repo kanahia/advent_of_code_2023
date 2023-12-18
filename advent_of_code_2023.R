@@ -585,5 +585,90 @@ for(j in seq_along(start_pos)) {
 steps
 
 
+# Day 9: Mirage Maintenance -----------------------------------------------
+
+day9_sample <- 
+  readLines("~/Projects/advent_of_code_2023/data/day9-sample.txt") %>%
+  lapply(., function(x) {
+    tmp <- unname(strsplit(x, " "))
+    as.numeric(unlist(tmp))
+  })
+
+day9_task <- 
+  readLines("~/Projects/advent_of_code_2023/data/day9-task.txt") %>%
+  lapply(., function(x) {
+    tmp <- unname(strsplit(x, " "))
+    as.numeric(unlist(tmp))
+  })
+
+vec_diff <- function(vec) {
+  res <- rep(NA, length(vec) -1)
+  
+  for(i in seq_along(vec)) {
+    if(i < length(vec)) {
+      res[i] <- vec[i+1] - vec[i] 
+    }
+  }
+
+  if(all(res == 0)) res <- c(res,0)
+  res
+}
+
+fill_mtx <- function(vec) {
+  
+  input_len <- length(vec)
+  extra_row <- vec_diff(vec)
+  
+  mtx <- matrix(NA, byrow = T, ncol = input_len +1)
+  mtx <- vec
+  mtx <- rbind(mtx, c(rep(0, length(vec) - length(extra_row)), extra_row))
+  i <- 2
+  j <- 1
+  
+  while(!all(extra_row == 0)) {
+    
+    extra_row <- vec_diff(mtx[i,][-c(1:j)])
+    mtx <- rbind(mtx, c(rep(0, length(vec) - length(extra_row)), extra_row))
+    i <- i+1
+    j <- j+1
+  }
+  mtx
+}
 
 
+fill_last_col <- function(mtx) {
+  
+  last_column <- mtx[,ncol(mtx)]
+  pos <- (nrow(mtx):1)
+  last_col <- rep(NA, nrow(mtx))
+  
+  for(i in seq_along(pos)) {
+    last_col[pos[i]] <- sum(last_column[(length(last_column) -(i -1)): length(last_column)])
+  }
+  last_col
+}
+
+
+# finally solution
+res <- rep(NA, length(day9_task))
+for(i in 1:length(day9_task)) {
+  
+  tmp <- fill_mtx(vec = day9_task[[i]])
+  res[i] <- fill_last_col(mtx = tmp)[1]
+
+}
+
+sum(res)
+
+
+# solution inspired by python user - decided to translate to R
+
+extrapolate <- function(l) {
+  diffs <- diff(l)
+  return(tail(l, 1) + if(length(l) > 1) extrapolate(diffs) else 0)
+}
+
+res2 <- rep(NA, 200)
+for(i in 1:length(day9_task)) {
+  res2[i] <- extrapolate(day9_task[[i]])
+}
