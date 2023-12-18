@@ -672,3 +672,44 @@ res2 <- rep(NA, 200)
 for(i in 1:length(day9_task)) {
   res2[i] <- extrapolate(day9_task[[i]])
 }
+
+
+
+# part2 -------------------------------------------------------------------
+
+get_reverse_vec <- function(data) {
+
+  mtx <- fill_mtx(data)
+  vec <- rep(NA, nrow(mtx))
+  for(i in 1:nrow(mtx)) {
+    vec[i] <- mtx[i,i]
+  }
+  vec
+}
+
+fill_rev_col <- function(col) {
+  
+  pos <- (length(col):1)
+  rev_col <- rep(NA, length(col))
+  tmp <- 0
+  
+  for(i in seq_along(pos)) {
+    if(i <= length(pos)) {
+      rev_col[pos[i]] <- col[pos[i]] - tmp
+      tmp <- rev_col[!is.na(rev_col)][1]
+    }
+  }
+  rev_col
+}
+
+
+# solution part 2
+res <- rep(NA, length(day9_task))
+
+for(i in 1:length(day9_task)) {
+  
+  tmp <- get_reverse_vec(data = day9_task[[i]])
+  res[i] <- fill_rev_col(col = tmp)[1]
+}
+
+sum(res)
